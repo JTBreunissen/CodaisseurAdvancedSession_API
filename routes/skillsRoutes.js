@@ -2,6 +2,15 @@
 
 module.exports = function(app) {
   const skills = require('../controllers/skillsController');
+  var RateLimit = require('express-rate-limit');
+
+  var limiter = new RateLimit({
+    windowMs: 10*60*1000,
+    max: 25,
+    delayMs: 0
+  });
+
+  app.use(limiter);
 
 
   // skills Routes
