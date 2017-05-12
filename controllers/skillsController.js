@@ -4,9 +4,9 @@ const mongoose = require('mongoose');
 const Skill = mongoose.model('Skills');
 
 exports.index = function(req, res) {
-  console.log(req.params, req.search)
-  Skill.find({}, function(err, skill) {
-    if (err) res.send(err);
+  console.log(req.query.created_at, req.params, req.search)
+  Skill.find(req.query.created_at, function(err, skill) {
+    if (err) res.status(422).send('No records founds');
     res.json(skill);
   });
 };
@@ -21,16 +21,14 @@ exports.create = function(req, res) {
 
 exports.show = function(req, res) {
   Skill.findById(req.params.skillId, function(err, skill) {
-    if (err)
-      res.send(err);
+    if (err) res.status(422).send('Record not found');
     res.json(skill);
   });
 };
 
 exports.update = function(req, res) {
   Skill.findOneAndUpdate(req.params.skillId, req.body, {new: true}, function(err, skill) {
-    if (err)
-      res.send(err);
+    if (err) res.status(422).send('Update not successful');
     res.json(skill);
   });
 };
@@ -39,8 +37,7 @@ exports.delete = function(req, res) {
   Skill.remove({
     _id: req.params.skillId
   }, function(err, skill) {
-    if (err)
-      res.send(err);
+    if (err) res.status(422).send('Record not deleted');
     res.json({ message: 'skill successfully deleted' });
   });
 };
